@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — Robotics Trainer · Octobrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F4F7F8;
+    --panel: #FFFFFF;
+    --navy: #12213E;
+    --navy-soft: #3B4A6B;
+    --teal: #00B3A4;
+    --orange: #FF6B35;
+    --line: #DDE3E8;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--navy);
+    font-family:'Inter', sans-serif; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2{ font-family:'Space Grotesk', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{color:inherit;}
+
+  .wrap{ max-width:640px; margin:0 auto; padding:0 24px; }
+
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 24px; max-width:640px; margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem; }
+  .brand .dot{ width:10px; height:10px; border-radius:50%; background:var(--orange); box-shadow:0 0 0 4px rgba(255,107,53,0.15); }
+  .back-link{
+    font-size:0.85rem; font-weight:600; text-decoration:none;
+    color:var(--navy-soft); display:flex; align-items:center; gap:6px;
+  }
+
+  .form-header{ padding:24px 0 8px; }
+  .role-badge{
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(255,107,53,0.08);
+    border:1.5px solid var(--orange);
+    color:var(--navy); font-size:0.85rem;
+    padding:8px 14px; border-radius:10px; margin-bottom:18px;
+  }
+  .role-badge strong{ color:var(--orange); font-family:'Space Grotesk', sans-serif; }
+  .role-dot{ width:8px; height:8px; border-radius:50%; background:var(--orange); flex-shrink:0; box-shadow:0 0 0 4px rgba(255,107,53,0.15); }
+  .form-header h1{ font-size:1.9rem; margin-bottom:10px; }
+  .form-header p{ color:var(--navy-soft); font-size:1rem; max-width:48ch; }
+
+  form{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); padding:32px;
+    margin:28px 0 60px;
+  }
+  .field{ margin-bottom:22px; }
+  .field:last-of-type{ margin-bottom:0; }
+  label{
+    display:block; font-size:0.85rem; font-weight:600;
+    margin-bottom:8px; color:var(--navy);
+  }
+  label .opt{
+    font-family:'JetBrains Mono', monospace; font-weight:400;
+    font-size:0.75rem; color:var(--navy-soft); text-transform:none;
+  }
+  input[type=text], input[type=url], select, textarea{
+    width:100%; padding:12px 14px; border-radius:10px;
+    border:1.5px solid var(--line); background:var(--bg);
+    font-family:'Inter', sans-serif; font-size:0.95rem; color:var(--navy);
+    outline:none; transition:border-color 0.15s ease;
+  }
+  input:focus, select:focus, textarea:focus{ border-color:var(--teal); }
+  textarea{ resize:vertical; min-height:90px; }
+
+  .radio-row{ display:flex; gap:16px; margin-top:4px; }
+  .radio-opt{
+    display:flex; align-items:center; gap:8px;
+    border:1.5px solid var(--line); border-radius:10px;
+    padding:10px 16px; cursor:pointer; font-size:0.92rem;
+    flex:1; background:var(--bg);
+  }
+  .radio-opt input{ accent-color:var(--orange); }
+  .radio-opt:has(input:checked){ border-color:var(--orange); background:rgba(255,107,53,0.06); }
+
+  .submit-btn{
+    width:100%; margin-top:6px;
+    background:var(--orange); color:#fff; border:none;
+    font-weight:600; font-size:1rem; padding:15px; border-radius:10px;
+    cursor:pointer; box-shadow:0 6px 18px rgba(255,107,53,0.28);
+  }
+  .submit-btn:disabled{ opacity:0.6; cursor:not-allowed; }
+
+  .status{
+    margin-top:16px; font-size:0.9rem; text-align:center;
+    padding:12px; border-radius:10px; display:none;
+  }
+  .status.show{ display:block; }
+  .status.ok{ background:rgba(0,179,164,0.1); color:#00857A; border:1px solid rgba(0,179,164,0.3); }
+  .status.err{ background:rgba(255,107,53,0.1); color:#C1441E; border:1px solid rgba(255,107,53,0.3); }
+
+  footer{
+    border-top:1px solid var(--line); padding:28px 24px;
+    text-align:center; font-size:0.85rem; color:var(--navy-soft);
+  }
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> Octobrain</div>
+    <a class="back-link" href="index.html">&larr; Back to posting</a>
+  </nav>
+
+  <main class="wrap">
+    <div class="form-header">
+      <div class="role-badge"><span class="role-dot"></span> Applying for: <strong>Robotics Trainer</strong></div>
+      <h1>Apply now</h1>
+      <p>Fill in your details below. It takes less than two minutes, and we'll follow up by phone or email.</p>
+    </div>
+
+    <form id="applyForm">
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+
+      <div class="field">
+        <label for="studentId">Student ID</label>
+        <input type="text" id="studentId" name="studentId" required>
+      </div>
+
+      <div class="field">
+        <label for="semester">Current semester</label>
+        <input type="text" id="semester" name="semester" placeholder="e.g. 6th" required>
+      </div>
+
+      <div class="field">
+        <label for="dept">Department</label>
+        <input type="text" id="dept" name="dept" required>
+      </div>
+
+      <div class="field">
+        <label for="cv">CV / Drive link <span class="opt">(if any)</span></label>
+        <input type="text" id="cv" name="cv" placeholder="https://drive.google.com/...">
+      </div>
+
+      <div class="field">
+        <label>Gender</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="gender" value="Male" required> Male</label>
+          <label class="radio-opt"><input type="radio" name="gender" value="Female" required> Female</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="comments">Comments <span class="opt">(optional)</span></label>
+        <textarea id="comments" name="comments" placeholder="Anything else you'd like us to know"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Submit application</button>
+      <div class="status" id="status"></div>
+    </form>
+  </main>
+
+  <footer>
+    Octobrain · Robotics Trainer (Part-Time) · Banani 24, Dhaka
+  </footer>
+
+<script>
+  // Paste your deployed Google Apps Script Web App URL here.
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3hRdY_PnhL-BkoRzO-ExJmqOqMbeYCOwT2PudBR7ksDOSdxxrRzjRjM-2bIl_Yll7Xw/exec";
+
+  const form = document.getElementById('applyForm');
+  const btn = document.getElementById('submitBtn');
+  const status = document.getElementById('status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (SCRIPT_URL.includes("PASTE_YOUR")) {
+      status.textContent = "Form isn't connected to a sheet yet. See setup instructions.";
+      status.className = "status show err";
+      return;
+    }
+
+    const data = new FormData(form);
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+    status.className = "status";
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+      });
+      status.textContent = "Application submitted! We'll be in touch soon.";
+      status.className = "status show ok";
+      form.reset();
+    } catch (err) {
+      status.textContent = "Something went wrong. Please try again.";
+      status.className = "status show err";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Submit application";
+    }
+  });
+</script>
+
+</body>
+</html>

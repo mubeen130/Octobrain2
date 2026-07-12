@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robotics Trainer (Part-Time) — Octobrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F4F7F8;
+    --panel: #FFFFFF;
+    --navy: #12213E;
+    --navy-soft: #3B4A6B;
+    --teal: #00B3A4;
+    --orange: #FF6B35;
+    --line: #DDE3E8;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--navy);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.02em; }
+  a{color:inherit;}
+  img,svg{display:block; max-width:100%;}
+
+  .wrap{ max-width:920px; margin:0 auto; padding:0 24px; }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 24px;
+    max-width:920px; margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem; }
+  .brand .dot{ width:10px; height:10px; border-radius:50%; background:var(--orange); box-shadow:0 0 0 4px rgba(255,107,53,0.15); }
+  .nav-cta{
+    font-size:0.85rem; font-weight:600;
+    padding:9px 16px; border-radius:999px;
+    background:var(--navy); color:#fff;
+    text-decoration:none;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:56px 0 40px; position:relative; overflow:hidden; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem; font-weight:500;
+    text-transform:uppercase; letter-spacing:0.12em;
+    color:var(--teal);
+    background:rgba(0,179,164,0.08);
+    border:1px solid rgba(0,179,164,0.25);
+    padding:6px 12px; border-radius:999px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--teal); }
+  .hero h1{
+    font-size:clamp(2.1rem, 5vw, 3.4rem);
+    line-height:1.08;
+    font-weight:700;
+    max-width:14ch;
+    color:var(--navy);
+  }
+  .hero h1 span{ color:var(--orange); }
+  .hero p.lede{
+    margin-top:20px;
+    max-width:52ch;
+    font-size:1.08rem;
+    color:var(--navy-soft);
+  }
+  .role-badge{
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(255,107,53,0.08);
+    border:1.5px solid var(--orange);
+    color:var(--navy);
+    font-size:0.9rem;
+    padding:10px 16px; border-radius:10px;
+    margin-top:20px;
+  }
+  .role-badge strong{ color:var(--orange); font-family:'Space Grotesk', sans-serif; }
+  .role-dot{ width:8px; height:8px; border-radius:50%; background:var(--orange); flex-shrink:0; box-shadow:0 0 0 4px rgba(255,107,53,0.15); }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-top:32px; }
+  .btn-primary{
+    background:var(--orange); color:#fff; text-decoration:none;
+    font-weight:600; padding:14px 26px; border-radius:10px;
+    font-size:0.95rem;
+    box-shadow:0 6px 18px rgba(255,107,53,0.28);
+  }
+  .btn-secondary{
+    text-decoration:none; font-weight:600; color:var(--navy);
+    padding:14px 22px; border-radius:10px; font-size:0.95rem;
+    border:1.5px solid var(--line);
+  }
+  .stat-row{
+    display:flex; gap:28px; margin-top:44px; flex-wrap:wrap;
+  }
+  .stat{ font-family:'JetBrains Mono', monospace; }
+  .stat .num{ font-size:1.4rem; font-weight:600; color:var(--navy); }
+  .stat .lab{ font-size:0.75rem; color:var(--navy-soft); text-transform:uppercase; letter-spacing:0.08em; }
+
+  /* ---------- PATHWAY (signature element) ---------- */
+  .pathway-section{ padding:20px 0 64px; }
+  .section-head{ margin-bottom:34px; }
+  .section-head .k{
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem;
+    color:var(--orange); text-transform:uppercase; letter-spacing:0.12em;
+    display:block; margin-bottom:8px;
+  }
+  .section-head h2{ font-size:1.7rem; color:var(--navy); }
+
+  .pathway{
+    background:var(--navy);
+    border-radius:20px;
+    padding:44px 32px 36px;
+    position:relative;
+    overflow:hidden;
+  }
+  .pathway::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:28px 28px;
+    pointer-events:none;
+  }
+  .trace{ position:relative; z-index:1; }
+  .trace-line{ position:relative; height:2px; background:linear-gradient(90deg, var(--teal), var(--orange)); margin:0 0 0 0; opacity:0.55; }
+  .nodes{
+    display:grid; grid-template-columns:repeat(3, 1fr);
+    gap:20px; position:relative; z-index:2;
+    margin-top:-11px;
+  }
+  .node{ display:flex; flex-direction:column; align-items:flex-start; }
+  .node .chip{
+    width:20px; height:20px; border-radius:50%;
+    background:var(--bg); border:3px solid var(--teal);
+    margin-bottom:16px;
+  }
+  .node:nth-child(2) .chip{ border-color:#FFC85C; }
+  .node:nth-child(3) .chip{ border-color:var(--orange); }
+  .node .tag{
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem;
+    color:#8EA0C4; text-transform:uppercase; letter-spacing:0.1em;
+    margin-bottom:6px;
+  }
+  .node h3{ color:#fff; font-size:1.15rem; margin-bottom:8px; }
+  .node p{ color:#B7C2DB; font-size:0.9rem; max-width:24ch; }
+
+  @media (max-width: 680px){
+    .nodes{ grid-template-columns:1fr; gap:32px; }
+    .trace-line{ display:none; }
+  }
+
+  /* ---------- TWO COL: responsibilities / day ---------- */
+  .grid-2{
+    display:grid; grid-template-columns:1fr 1fr; gap:24px;
+    padding-bottom:64px;
+  }
+  @media (max-width:760px){ .grid-2{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); padding:30px;
+  }
+  .card h2{ font-size:1.25rem; margin-bottom:20px; }
+
+  .task-list{ list-style:none; }
+  .task-list li{
+    display:flex; gap:12px; padding:10px 0;
+    border-top:1px solid var(--line);
+    font-size:0.95rem; color:var(--navy-soft);
+  }
+  .task-list li:first-child{ border-top:none; padding-top:0; }
+  .task-list li::before{
+    content:'▹'; color:var(--teal); font-weight:700; flex-shrink:0;
+  }
+
+  .day-list{ list-style:none; counter-reset:step; }
+  .day-list li{
+    counter-increment:step;
+    display:flex; gap:14px; padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .day-list li:first-child{ border-top:none; padding-top:0; }
+  .day-list li::before{
+    content: counter(step) ' —';
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.8rem; color:var(--orange); font-weight:600;
+    flex-shrink:0; padding-top:1px;
+  }
+  .day-list li .time{
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem;
+    color:var(--navy-soft); display:block; margin-bottom:2px;
+  }
+  .day-list li .desc{ font-size:0.95rem; color:var(--navy); }
+
+  /* ---------- PAY ---------- */
+  .pay-section{ padding-bottom:64px; }
+  .pay-card{
+    background:linear-gradient(135deg, var(--navy) 0%, #1B2E52 100%);
+    border-radius:20px; padding:38px 34px;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:24px;
+  }
+  .pay-card .label{
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem;
+    color:#8EA0C4; text-transform:uppercase; letter-spacing:0.1em;
+    margin-bottom:8px;
+  }
+  .pay-card .amount{ color:#fff; font-size:2.4rem; font-weight:700; font-family:'Space Grotesk', sans-serif; }
+  .pay-card .amount span{ font-size:1.1rem; color:#B7C2DB; font-weight:500; }
+  .pay-note{ color:#B7C2DB; font-size:0.9rem; max-width:32ch; }
+
+  /* ---------- CTA / FOOTER ---------- */
+  .cta-section{ padding:20px 0 80px; text-align:center; }
+  .cta-section h2{ font-size:1.9rem; margin-bottom:14px; }
+  .cta-section p{ color:var(--navy-soft); max-width:44ch; margin:0 auto 30px; }
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:28px 24px; text-align:center;
+    font-size:0.85rem; color:var(--navy-soft);
+  }
+
+  ::selection{ background:var(--orange); color:#fff; }
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> Octobrain</div>
+    <a class="nav-cta" href="apply.html">Click here to apply</a>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Part-time · Banani 24, Dhaka</span>
+      <h1>Teach robots to <span>think</span>. Teach kids to build.</h1>
+      <div class="role-badge">
+        <span class="role-dot"></span>
+        Now hiring for: <strong>Robotics Trainer</strong> — the only part-time role currently open
+      </div>
+      <p class="lede">Octobrain is hiring Part-Time Robotics Trainers for the semester — run hands-on workshops with Studiono, a block-based platform in the spirit of Scratch, and help students build their first robots.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="apply.html">Click here to apply</a>
+        <a class="btn-secondary" href="#day">See a typical day</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">৳600</div><div class="lab">Per working day</div></div>
+        <div class="stat"><div class="num">1 sem</div><div class="lab">Starting term</div></div>
+        <div class="stat"><div class="num">9:00</div><div class="lab">Office start</div></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="pathway-section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="k">Why apply</span>
+        <h2>One role, three stops on the circuit</h2>
+      </div>
+      <div class="pathway">
+        <div class="trace"><div class="trace-line"></div></div>
+        <div class="nodes">
+          <div class="node">
+            <div class="chip"></div>
+            <span class="tag">Stop 01 · This semester</span>
+            <h3>Robotics Trainer</h3>
+            <p>Part-time, ৳600/day. Run workshops, build your teaching chops.</p>
+          </div>
+          <div class="node">
+            <div class="chip"></div>
+            <span class="tag">Stop 02 · ~3 months</span>
+            <h3>Internship</h3>
+            <p>Strong performers move up to an internship at Octobrain.</p>
+          </div>
+          <div class="node">
+            <div class="chip"></div>
+            <span class="tag">Stop 03 · Beyond</span>
+            <h3>Full-Time Role</h3>
+            <p>Successful interns are considered for a full-time position.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap grid-2">
+    <div class="card">
+      <h2>Responsibilities</h2>
+      <ul class="task-list">
+        <li>Sort and organize robotics kits</li>
+        <li>Prepare lesson plans for workshops</li>
+        <li>Teach using Studiono, a block-based programming platform</li>
+        <li>Conduct robotics workshops for students</li>
+        <li>Prepare kits for upcoming sessions</li>
+      </ul>
+    </div>
+
+    <div class="card" id="day">
+      <h2>A typical day</h2>
+      <ul class="day-list">
+        <li><div><span class="time">9:00 AM</span><span class="desc">Arrive at the Banani 24 office</span></div></li>
+        <li><div><span class="time">Morning</span><span class="desc">Pack the required robotics kits</span></div></li>
+        <li><div><span class="time">Morning</span><span class="desc">Travel to the workshop venue</span></div></li>
+        <li><div><span class="time">Session</span><span class="desc">Conduct the robotics workshop as trainer</span></div></li>
+        <li><div><span class="time">After</span><span class="desc">Return to the office</span></div></li>
+        <li><div><span class="time">Wrap-up</span><span class="desc">Unpack, organize, and prep kits for tomorrow</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap pay-section">
+    <div class="pay-card">
+      <div>
+        <div class="label">Remuneration</div>
+        <div class="amount">৳600 <span>/ working day</span></div>
+      </div>
+      <p class="pay-note">Paid per working day, with a clear path toward an internship and full-time role for those who stand out.</p>
+    </div>
+  </section>
+
+  <section class="wrap cta-section" id="apply">
+    <h2>Passionate about robotics and teaching?</h2>
+    <p>If you enjoy working with students and want a role that can grow into an internship and eventually to a career, this is a great place to start. <strong>Robotics Trainer is the only part-time role open right now.</strong></p>
+    <a class="btn-primary" href="apply.html">Click here to apply</a>
+  </section>
+
+  <footer>
+    Octobrain · Robotics Trainer (Part-Time) · Banani 24, Dhaka
+  </footer>
+
+</body>
+</html>
