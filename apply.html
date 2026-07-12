@@ -70,11 +70,15 @@
     font-family:'JetBrains Mono', monospace; font-weight:400;
     font-size:0.75rem; color:var(--navy-soft); text-transform:none;
   }
-  input[type=text], input[type=url], select, textarea{
+  input[type=text], input[type=file], select, textarea{
     width:100%; padding:12px 14px; border-radius:10px;
     border:1.5px solid var(--line); background:var(--bg);
     font-family:'Inter', sans-serif; font-size:0.95rem; color:var(--navy);
     outline:none; transition:border-color 0.15s ease;
+  }
+  input[type=file] {
+    padding:9px 12px;
+    cursor:pointer;
   }
   input:focus, select:focus, textarea:focus{ border-color:var(--teal); }
   textarea{ resize:vertical; min-height:90px; }
@@ -147,8 +151,8 @@
       </div>
 
       <div class="field">
-        <label for="cv">CV / Drive link <span class="opt">(if any)</span></label>
-        <input type="file" id="cv" name="cv" placeholder="https://drive.google.com/...">
+        <label for="cv">CV / Resume <span class="opt">(PDF only, if any)</span></label>
+        <input type="file" id="cv" name="cv" accept="application/pdf">
       </div>
 
       <div class="field">
@@ -174,7 +178,6 @@
   </footer>
 
 <script>
-  // Paste your deployed Google Apps Script Web App URL here.
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPiox5ft2RhBa5zlyi02DWF6nGv4ntfACH1Ufk5lJZkavmDpSFjIKzww9oopaGClGHlA/exec";
 
   const form = document.getElementById('applyForm');
@@ -190,17 +193,48 @@
       return;
     }
 
-    const data = new FormData(form);
     btn.disabled = true;
     btn.textContent = "Submitting...";
     status.className = "status";
 
+    const formData = new FormData(form);
+    const urlParams = new URLSearchParams();
+
+    // Map regular text/radio form attributes to standard URL Parameters
+    for (const [key, value] of formData.entries()) {
+      if (key !== 'cv') { 
+        urlParams.append(key, value);
+      }
+    }
+
+    const fileInput = document.getElementById('cv');
+    const file = fileInput.files[0];
+
+    // Read file and parse structure to a base64 string stream
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = error => reject(error);
+    });
+
     try {
+      if (file) {
+        const base64Data = await toBase64(file);
+        urlParams.append('fileData', base64Data);
+        urlParams.append('fileName', `${formData.get('name') || 'Applicant'}_CV.pdf`);
+        urlParams.append('fileMimeType', file.type);
+      }
+
       await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
-        body: data
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: urlParams.toString()
       });
+
       status.textContent = "Application submitted! We'll be in touch soon.";
       status.className = "status show ok";
       form.reset();
