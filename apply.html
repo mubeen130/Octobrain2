@@ -70,7 +70,7 @@
     font-family:'JetBrains Mono', monospace; font-weight:400;
     font-size:0.75rem; color:var(--navy-soft); text-transform:none;
   }
-  input[type=text], select, textarea{
+  input[type=text], input[type=url], select, textarea{
     width:100%; padding:12px 14px; border-radius:10px;
     border:1.5px solid var(--line); background:var(--bg);
     font-family:'Inter', sans-serif; font-size:0.95rem; color:var(--navy);
@@ -79,7 +79,35 @@
   input:focus, select:focus, textarea:focus{ border-color:var(--teal); }
   textarea{ resize:vertical; min-height:90px; }
 
-  /* --- DUAL FILE & LINK ZONE --- */
+  /* --- METHOD SELECTION BUTTONS --- */
+  .method-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .method-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--line);
+    background: var(--panel);
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--navy-soft);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+  .method-btn.active {
+    border-color: var(--teal);
+    color: var(--navy);
+    background: rgba(0, 179, 164, 0.04);
+  }
+
+  /* --- CLEAN FILE UPLOAD ZONE --- */
   .file-dropzone {
     position: relative;
     display: flex;
@@ -90,41 +118,13 @@
     border: 2px dashed var(--line);
     border-radius: 10px;
     background: var(--bg);
-    transition: all 0.2s ease;
+    cursor: pointer;
     text-align: center;
+    transition: all 0.2s ease;
   }
-  .dropzone-trigger {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    width: 100%;
-  }
-  .file-icon {
-    font-size: 1.6rem;
-    margin-bottom: 6px;
-    color: var(--navy-soft);
-    transition: transform 0.2s ease;
-  }
-  .dropzone-trigger:hover .file-icon {
-    transform: translateY(-2px);
-    color: var(--teal);
-  }
-  .file-text {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--navy);
-  }
-  .file-subtext {
-    font-size: 0.75rem;
-    color: var(--navy-soft);
-    margin-top: 2px;
-  }
-  .file-subtext span {
-    color: var(--orange);
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 500;
+  .file-dropzone:hover {
+    border-color: var(--teal);
+    background: rgba(0, 179, 164, 0.02);
   }
   .file-dropzone input[type=file] {
     position: absolute;
@@ -134,43 +134,24 @@
     left: 0;
     opacity: 0;
     cursor: pointer;
-    z-index: 1;
   }
-  /* Paste Link Mode Input Box */
-  .link-input-container {
-    width: 100%;
-    margin-top: 12px;
-    display: none;
-    position: relative;
-    z-index: 2;
+  .file-icon {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    color: var(--navy-soft);
   }
-  .link-input-container input {
-    background: var(--panel);
-  }
-  .cancel-link-btn {
-    font-size: 0.75rem;
-    color: var(--orange);
-    cursor: pointer;
-    margin-top: 6px;
-    display: inline-block;
-  }
-  /* Dynamic Active States */
+  .file-text { font-size: 0.9rem; font-weight: 500; color: var(--navy); }
+  .file-subtext { font-size: 0.75rem; color: var(--navy-soft); margin-top: 2px; }
+  
   .file-dropzone.has-file {
     border-style: solid;
     border-color: var(--teal);
-    background: rgba(0, 179, 164, 0.05);
+    background: rgba(0, 179, 164, 0.06);
   }
-  .file-dropzone.has-link {
-    border-style: solid;
-    border-color: var(--orange);
-    background: rgba(255, 107, 53, 0.02);
-  }
-  .file-dropzone.has-file input[type=file] {
-    z-index: 3; /* keeps file clickable to replace it */
-  }
-  .file-dropzone.has-link input[type=file] {
-    display: none; /* hides file layer entirely when typing link */
-  }
+
+  /* --- CONTAINER VISIBILITY CONTROLS --- */
+  .method-panel { display: none; }
+  .method-panel.active { display: block; }
 
   .radio-row{ display:flex; gap:16px; margin-top:4px; }
   .radio-opt{
@@ -240,20 +221,24 @@
       </div>
 
       <div class="field">
-        <label>CV / Resume / Drive Link <span class="opt">(Optional)</span></label>
-        <div class="file-dropzone" id="dropzone">
-          <div class="dropzone-trigger" id="dropzoneTrigger">
+        <label>How would you like to submit your CV? <span class="opt">(Optional)</span></label>
+        
+        <div class="method-selector">
+          <button type="button" class="method-btn active" id="btnUpload">📄 Upload PDF File</button>
+          <button type="button" class="method-btn" id="btnLink">🔗 Paste Google Drive Link</button>
+        </div>
+
+        <div class="method-panel active" id="panelUpload">
+          <div class="file-dropzone" id="dropzone">
             <div class="file-icon" id="mainIcon">📄</div>
             <div class="file-text" id="fileText">Click or drag file here to upload</div>
-            <div class="file-subtext" id="fileSubtext">PDF up to 10MB or <span id="switchToLink">paste Drive link</span></div>
+            <div class="file-subtext">PDF format up to 10MB</div>
+            <input type="file" id="cvFile" accept="application/pdf">
           </div>
-          
-          <input type="file" id="cv" name="cv" accept="application/pdf">
-          
-          <div class="link-input-container" id="linkContainer">
-            <input type="text" id="driveLink" placeholder="https://drive.google.com/...">
-            <span class="cancel-link-btn" id="switchToUpload">← Back to file upload</span>
-          </div>
+        </div>
+
+        <div class="method-panel" id="panelLink">
+          <input type="url" id="cvLink" placeholder="https://drive.google.com/...">
         </div>
       </div>
 
@@ -286,69 +271,61 @@
   const btn = document.getElementById('submitBtn');
   const status = document.getElementById('status');
   
-  // Custom hybrid elements
-  const fileInput = document.getElementById('cv');
-  const driveLinkInput = document.getElementById('driveLink');
-  const dropzone = document.getElementById('dropzone');
-  const dropzoneTrigger = document.getElementById('dropzoneTrigger');
-  const linkContainer = document.getElementById('linkContainer');
-  const fileText = document.getElementById('fileText');
-  const fileSubtext = document.getElementById('fileSubtext');
-  const mainIcon = document.getElementById('mainIcon');
+  // Toggles and panels
+  const btnUpload = document.getElementById('btnUpload');
+  const btnLink = document.getElementById('btnLink');
+  const panelUpload = document.getElementById('panelUpload');
+  const panelLink = document.getElementById('panelLink');
+
+  // Input fields
+  const cvFileInput = document.getElementById('cvFile');
+  const cvLinkInput = document.getElementById('cvLink');
   
-  const switchToLink = document.getElementById('switchToLink');
-  const switchToUpload = document.getElementById('switchToUpload');
+  // Custom file styling elements
+  const dropzone = document.getElementById('dropzone');
+  const fileText = document.getElementById('fileText');
+  const mainIcon = document.getElementById('mainIcon');
 
-  // UI Event: Switch to Drive link pasting mode
-  switchToLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    fileInput.value = ""; // clear any attached file
-    dropzone.className = "file-dropzone has-link";
-    dropzoneTrigger.style.display = "none";
-    linkContainer.style.display = "block";
-    driveLinkInput.focus();
+  let currentMethod = "file"; // tracking variable: "file" or "link"
+
+  // Select Upload File Option
+  btnUpload.addEventListener('click', () => {
+    currentMethod = "file";
+    btnUpload.classList.add('active');
+    btnLink.classList.remove('active');
+    panelUpload.classList.add('active');
+    panelLink.classList.remove('active');
+    cvLinkInput.value = ""; // Clear other input
   });
 
-  // UI Event: Switch back to File upload mode
-  switchToUpload.addEventListener('click', (e) => {
-    e.preventDefault();
-    driveLinkInput.value = ""; // clear text link
-    resetDropzoneUI();
-  });
-
-  // UI Event: Handle direct file selections
-  fileInput.addEventListener('change', () => {
-    if (fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      dropzone.className = "file-dropzone has-file";
-      mainIcon.textContent = "📎";
-      fileText.textContent = file.name;
-      fileSubtext.textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB · Click to clear or replace`;
-    } else {
-      resetDropzoneUI();
-    }
-  });
-
-  function resetDropzoneUI() {
-    dropzone.className = "file-dropzone";
-    dropzoneTrigger.style.display = "flex";
-    linkContainer.style.display = "none";
+  // Select Paste Link Option
+  btnLink.addEventListener('click', () => {
+    currentMethod = "link";
+    btnLink.classList.add('active');
+    btnUpload.classList.remove('active');
+    panelLink.classList.add('active');
+    panelUpload.classList.remove('active');
+    
+    // Clear and reset file choices
+    cvFileInput.value = "";
+    dropzone.classList.remove('has-file');
     mainIcon.textContent = "📄";
     fileText.textContent = "Click or drag file here to upload";
-    fileSubtext.innerHTML = 'PDF up to 10MB or <span id="switchToLink">paste Drive link</span>';
-    
-    // Rebind the click listener because innerHTML wipes old elements
-    document.getElementById('switchToLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      fileInput.value = "";
-      dropzone.className = "file-dropzone has-link";
-      dropzoneTrigger.style.display = "none";
-      linkContainer.style.display = "block";
-      driveLinkInput.focus();
-    });
-  }
+  });
+
+  // Handle direct file selector changes
+  cvFileInput.addEventListener('change', () => {
+    if (cvFileInput.files.length > 0) {
+      const file = cvFileInput.files[0];
+      dropzone.classList.add('has-file');
+      mainIcon.textContent = "📎";
+      fileText.textContent = `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+    } else {
+      dropzone.classList.remove('has-file');
+      mainIcon.textContent = "📄";
+      fileText.textContent = "Click or drag file here to upload";
+    }
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -360,17 +337,12 @@
     const formData = new FormData(form);
     const urlParams = new URLSearchParams();
 
-    // Copy text fields normally
+    // Map all normal text inputs safely
     for (const [key, value] of formData.entries()) {
-      if (key !== 'cv') { 
-        urlParams.append(key, value);
-      }
+      urlParams.append(key, value);
     }
 
-    const file = fileInput.files[0];
-    const rawLink = driveLinkInput.value.trim();
-
-    // Helper file converter
+    // Helper base64 converter
     const toBase64 = file => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -379,15 +351,14 @@
     });
 
     try {
-      if (file) {
-        // Mode A: User uploaded a direct PDF file
+      if (currentMethod === "file" && cvFileInput.files.length > 0) {
+        const file = cvFileInput.files[0];
         const base64Data = await toBase64(file);
         urlParams.append('fileData', base64Data);
         urlParams.append('fileName', `${formData.get('name') || 'Applicant'}_CV.pdf`);
         urlParams.append('fileMimeType', file.type);
-      } else if (rawLink) {
-        // Mode B: User pasted a Google Drive link
-        urlParams.append('pastedLink', rawLink);
+      } else if (currentMethod === "link" && cvLinkInput.value.trim() !== "") {
+        urlParams.append('pastedLink', cvLinkInput.value.trim());
       }
 
       await fetch(SCRIPT_URL, {
@@ -402,9 +373,14 @@
       status.textContent = "Application submitted! We'll be in touch soon.";
       status.className = "status show ok";
       
+      // Complete reset
       form.reset();
-      driveLinkInput.value = "";
-      resetDropzoneUI();
+      cvFileInput.value = "";
+      cvLinkInput.value = "";
+      dropzone.classList.remove('has-file');
+      mainIcon.textContent = "📄";
+      fileText.textContent = "Click or drag file here to upload";
+      btnUpload.click(); // revert selection back to file tab
       
     } catch (err) {
       status.textContent = "Something went wrong. Please try again.";
