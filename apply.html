@@ -87,7 +87,7 @@
   }
   .method-btn {
     flex: 1;
-    padding: 10px 14px;
+    padding: 11px 14px;
     border: 1.5px solid var(--line);
     background: var(--panel);
     border-radius: 10px;
@@ -101,20 +101,23 @@
     gap: 8px;
     transition: all 0.15s ease;
   }
+  .method-btn:hover {
+    border-color: var(--navy-soft);
+  }
   .method-btn.active {
     border-color: var(--teal);
     color: var(--navy);
     background: rgba(0, 179, 164, 0.04);
   }
 
-  /* --- CLEAN FILE UPLOAD ZONE --- */
+  /* --- BEAUTIFUL FILE UPLOAD DROPZONE --- */
   .file-dropzone {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 26px;
     border: 2px dashed var(--line);
     border-radius: 10px;
     background: var(--bg);
@@ -149,7 +152,7 @@
     background: rgba(0, 179, 164, 0.06);
   }
 
-  /* --- CONTAINER VISIBILITY CONTROLS --- */
+  /* --- VISIBILITY CONTROL PANELS --- */
   .method-panel { display: none; }
   .method-panel.active { display: block; }
 
@@ -221,7 +224,7 @@
       </div>
 
       <div class="field">
-        <label>How would you like to submit your CV? <span class="opt">(Optional)</span></label>
+        <label>How would you like to provide your CV? <span class="opt">(Optional)</span></label>
         
         <div class="method-selector">
           <button type="button" class="method-btn active" id="btnUpload">📄 Upload PDF File</button>
@@ -277,28 +280,28 @@
   const panelUpload = document.getElementById('panelUpload');
   const panelLink = document.getElementById('panelLink');
 
-  // Input fields
+  // Interactive UI Input Targets
   const cvFileInput = document.getElementById('cvFile');
   const cvLinkInput = document.getElementById('cvLink');
   
-  // Custom file styling elements
+  // Graphical dropzone targets
   const dropzone = document.getElementById('dropzone');
   const fileText = document.getElementById('fileText');
   const mainIcon = document.getElementById('mainIcon');
 
-  let currentMethod = "file"; // tracking variable: "file" or "link"
+  let currentMethod = "file"; 
 
-  // Select Upload File Option
+  // Switch display state to File Upload mode
   btnUpload.addEventListener('click', () => {
     currentMethod = "file";
     btnUpload.classList.add('active');
     btnLink.classList.remove('active');
     panelUpload.classList.add('active');
     panelLink.classList.remove('active');
-    cvLinkInput.value = ""; // Clear other input
+    cvLinkInput.value = ""; 
   });
 
-  // Select Paste Link Option
+  // Switch display state to Link Input mode
   btnLink.addEventListener('click', () => {
     currentMethod = "link";
     btnLink.classList.add('active');
@@ -306,14 +309,13 @@
     panelLink.classList.add('active');
     panelUpload.classList.remove('active');
     
-    // Clear and reset file choices
     cvFileInput.value = "";
     dropzone.classList.remove('has-file');
     mainIcon.textContent = "📄";
     fileText.textContent = "Click or drag file here to upload";
   });
 
-  // Handle direct file selector changes
+  // Listen for direct file updates and change text UI cues accordingly
   cvFileInput.addEventListener('change', () => {
     if (cvFileInput.files.length > 0) {
       const file = cvFileInput.files[0];
@@ -337,12 +339,12 @@
     const formData = new FormData(form);
     const urlParams = new URLSearchParams();
 
-    // Map all normal text inputs safely
+    // Loop through normal key-value pairs (Name, ID, Semester, Dept, Gender, Comments)
     for (const [key, value] of formData.entries()) {
       urlParams.append(key, value);
     }
 
-    // Helper base64 converter
+    // Async block reader to safely parse physical files into Base64 parameter streams
     const toBase64 = file => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -352,15 +354,18 @@
 
     try {
       if (currentMethod === "file" && cvFileInput.files.length > 0) {
+        // Mode A: File Upload processing
         const file = cvFileInput.files[0];
         const base64Data = await toBase64(file);
         urlParams.append('fileData', base64Data);
         urlParams.append('fileName', `${formData.get('name') || 'Applicant'}_CV.pdf`);
         urlParams.append('fileMimeType', file.type);
       } else if (currentMethod === "link" && cvLinkInput.value.trim() !== "") {
+        // Mode B: Paste Drive Link processing
         urlParams.append('pastedLink', cvLinkInput.value.trim());
       }
 
+      // Fire payload to your live script URL using application/x-www-form-urlencoded format
       await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
@@ -373,14 +378,14 @@
       status.textContent = "Application submitted! We'll be in touch soon.";
       status.className = "status show ok";
       
-      // Complete reset
+      // Clean and reset the interface back to blank initial state
       form.reset();
       cvFileInput.value = "";
       cvLinkInput.value = "";
       dropzone.classList.remove('has-file');
       mainIcon.textContent = "📄";
       fileText.textContent = "Click or drag file here to upload";
-      btnUpload.click(); // revert selection back to file tab
+      btnUpload.click(); 
       
     } catch (err) {
       status.textContent = "Something went wrong. Please try again.";
